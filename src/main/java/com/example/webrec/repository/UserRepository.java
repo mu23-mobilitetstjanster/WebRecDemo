@@ -47,4 +47,28 @@ public class UserRepository {
 
     return true;
   }
+
+  public String findPassword(String username) {
+    String password;
+
+    try {
+      String sql = "SELECT password FROM users WHERE username=?";
+      PreparedStatement pstmt = conn.prepareStatement(sql);
+
+      pstmt.setString(1, username);
+
+      ResultSet rs = pstmt.executeQuery();
+
+      if(rs.next()) {
+        password = rs.getString("password");
+      } else {
+        password = null;
+      }
+
+    } catch(SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    return password;
+  }
 }

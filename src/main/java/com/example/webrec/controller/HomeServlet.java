@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -33,8 +34,17 @@ public class HomeServlet extends HttpServlet {
     }
   }
 
-  private void login(HttpServletRequest req, HttpServletResponse resp) {
+  private void login(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    String username = req.getParameter("username");
+    String password = req.getParameter("password");
 
+    if(authService.find(username, password)) {
+      HttpSession session = req.getSession(true);
+
+      session.setAttribute("username", username);
+    } else {
+      resp.getWriter().println("Invalid user authentication");
+    }
   }
 
   private void register(HttpServletRequest req, HttpServletResponse resp) throws IOException {
